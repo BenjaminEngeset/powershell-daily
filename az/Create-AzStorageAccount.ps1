@@ -1,10 +1,10 @@
 function Create-AzStorageAccount {
     <#
         .SYNOPSIS
-        Creates an storage account.
+            Creates an storage account.
 
         .DESCRIPTION
-        Creates an storage account with essential configuration.
+            Creates an storage account with essential configuration.
 
         .PARAMETER ResourceGroupName
             The resource group name where the storage account should be deployed.
