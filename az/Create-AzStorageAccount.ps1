@@ -42,7 +42,7 @@ function Create-AzStorageAccount {
         .PARAMETER SecurityBaseline
             Switch parameter for enabling security enhancements that are not default. HTTPS traffic only, minimum TLS version 1.2 and blob allow blob public access to false.
     #>
-    [CmdletBinding(SupportsShouldProcess)]
+    [CmdletBinding()]
     param (
         [Parameter(ValueFromPipelineByPropertyName)]
         [Alias('rg')]
