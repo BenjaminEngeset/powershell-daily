@@ -113,7 +113,7 @@ function Create-AzStorageAccount {
                 StorageAccountName = $storage.StorageAccountName
                 ResourceGroupName  = $storage.ResourceGroupName
                 Location           = $storage.PrimaryLocation
-                Sku                = ($storage.Sku.Name)
+                Sku                = ($storage.Sku).Name
                 Kind               = $storage.Kind
                 AccessTier         = $storage.AccessTier
                 HttpsTrafficOnly   = $storage.EnableHttpsTrafficOnly
