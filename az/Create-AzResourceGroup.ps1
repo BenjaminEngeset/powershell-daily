@@ -1,4 +1,23 @@
 function Create-AzResourceGroup {
+    <#
+        .SYNOPSIS
+            Creates an resource group.
+        
+        .DESCRIPTION
+            Creates an resource group within a subscription context.
+        
+        .PARAMETER Name
+            The name of the resource group to create.
+        
+        .PARAMETER Location
+            The location where the resource group should be deployed.
+
+        .PARAMETER Tag
+            The tags that can be applied to the resource group, in format @{key0 = 'value0'; key1 = 'value1'}.
+        
+        .PARAMETER Force
+            Switch parameter to force the command to run without asking for user confirmation.
+    #>
     [CmdletBinding(SupportsShouldProcess)]
     param (
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
