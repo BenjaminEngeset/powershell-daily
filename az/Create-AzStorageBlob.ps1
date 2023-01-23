@@ -34,6 +34,12 @@ function Create-AzStorageBlob {
         [ValidateSet('Hot', 'Cool', 'Archive')]
         [string]$StandardBlobTier,
 
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+        [string]$ResourceGroup,
+
+        [Parameter(ValueFromPipelineByPropertyName)]
+        [switch]$Versioning,
+
         [Parameter(ValueFromPipelineByPropertyName)]
         [switch]$Force
     )
@@ -43,24 +49,34 @@ function Create-AzStorageBlob {
     }
     
     process {
-        Write-Verbose "[$((Get-Date).TimeOfDay) PROCESS] Creating blob content.."
+        Write-Verbose "[$((Get-Date).TimeOfDay) PROCESS] Creating `"$blob`""
         $context = New-AzStorageContext -StorageAccountName $StorageAccount -UseConnectedAccount
         $PSBoundParameters.Remove('StorageAccount')
+        $PSBoundParameters.Remove('Versioning')
+        $PSBoundParameters.Remove('ResourceGroup')
         $blobContent = Set-AzStorageBlobContent @PSBoundParameters -Context $context
+        if ($Versioning) {
+            $usbspSplat = @{
+                ResourceGroupName   = $ResourceGroup
+                StorageAccountName  = $StorageAccount
+                IsVersioningEnabled = $True
+            }
+            $blobVersioning = Update-AzStorageBlobServiceProperty @usbspSplat
+        }
         [PSCustomObject]@{
-            PSTypeName     = 'PSStorageBlob'
-            LastModified   = $blobContent.LastModified
-            Computername   = $env:COMPUTERNAME
-            Name           = $blobContent.Name
-            Length         = $blobContent.Length
-            BlobType       = $blobContent.BlobType
-            AccessTier     = $blobContent.AccessTier
-            Tags           = $blobContent.Tags
-            ContentType    = $blobContent.ContentType
-            VersionId      = $BlobType.VersionId
-            SnapshotTime   = $blobContent.SnapshotTime
-            BlobProperties = $blobContent.BlobProperties
-            
+            PSTypeName          = 'PSStorageBlob'
+            LastModified        = $blobContent.LastModified
+            Computername        = $env:COMPUTERNAME
+            Name                = $blobContent.Name
+            Length              = $blobContent.Length
+            BlobType            = $blobContent.BlobType
+            AccessTier          = $blobContent.AccessTier
+            Tags                = $blobContent.Tags
+            ContentType         = $blobContent.ContentType
+            IsVersioningEnabled = (Get-AzStorageBlobServiceProperty -ResourceGroupName $ResourceGroup -StorageAccountName $StorageAccount).IsVersioningEnabled
+            VersionId           = $BlobType.VersionId
+            SnapshotTime        = $blobContent.SnapshotTime
+            BlobProperties      = $blobContent.BlobProperties    
         }
     }
     
