@@ -1,4 +1,48 @@
 function Create-AzStorageBlob {
+    <#
+    .SYNOPSIS
+        Creates an blob in a container.
+
+    .DESCRIPTION 
+        Creates an blob in a container within a storage account.
+    
+    .PARAMETER StorageAccount
+        The name of the storage account where the blob should be created.
+    
+    .PARAMETER Container
+        The name of the container within the storage account where the blob should be created.
+
+    .PARAMETER File
+        Specifies a local file path for a file to upload as blob content.
+
+    .PARAMETER Blob
+        Specifies the name of the blob to create.
+
+    .PARAMETER BlobType
+        Specifies the type for the blob to create. Accepted values are Block, Page, Append.
+    
+    .PARAMETER Properties
+        Specifies properties for the blob to create.
+        The supported properties are CacheControl, ContentDisposition, ContentEncoding, ContentLanguage, ContentMD5, ContentType.
+
+    .PARAMETER Metadata
+        Specifies metadata for the blob to create.
+    
+    .PARAMETER Tag
+        Tags for the blob to create. In the format @{key0 = value0; key1 = 'value1}.
+
+    .PARAMETER StandardBlobTier
+        Block blob tier, accepted values are Hot, Cool, Archive.
+    
+    .PARAMETER ResourceGroup
+        The name of the resource group which contains the storage account.
+
+    .PARAMETER Versioning
+        Enables versioning for the blob service of the storage account.
+    
+    .PARAMETER Force
+        Overwrites an existing blob without prompting you for confirmation.
+    #>
     [CmdletBinding(SupportsShouldProcess)]
     param (
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
