@@ -34,8 +34,8 @@
             Set-Location -Path $tsDir
             brm generate
             Set-Location -Path $env:USERPROFILE
-            Rename-Item -Path $newName -Name $dirToRename
-            Set-Location -Path ($tsDir -creplace '(?<![^\\])template-specs(?![^\\])', 'modules')
+            Rename-Item -Path $newName -NewName $dirToRename
+            Set-Location -Path ($tsDir -creplace '(?<![^\\])modules(?![^\\])', 'template-specs')
         }
         else {
             throw 'Could not find the directory for the template spec. Navigate to the created folder and invoke the command again from there.'
@@ -71,8 +71,8 @@ function Brm-Validate {
             Set-Location -Path $tsDir
             brm validate
             Set-Location -Path $env:USERPROFILE
-            Rename-Item -Path $newName -Name $dirToRename
-            Set-Location -Path ($tsDir -creplace '(?<![^\\])template-specs(?![^\\])', 'modules')
+            Rename-Item -Path $newName -NewName $dirToRename
+            Set-Location -Path ($tsDir -creplace '(?<![^\\])modules(?![^\\])', 'template-specs')
         }
         else {
             throw 'Could not find the directory for the template spec. Navigate to the template spec folder and invoke the command again from there.'
