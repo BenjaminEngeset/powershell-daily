@@ -29,7 +29,7 @@ function Create-AzStorageBlob {
         Specifies metadata for the blob to create.
     
     .PARAMETER Tag
-        Tags for the blob to create. In the format @{key0 = value0; key1 = 'value1}.
+        Tags for the blob to create. In the format @{key0 = 'value0'; key1 = 'value1'}.
 
     .PARAMETER StandardBlobTier
         Block blob tier, accepted values are Hot, Cool, Archive.
