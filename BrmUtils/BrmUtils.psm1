@@ -25,9 +25,18 @@
     }
 
     process {
-        if ((Get-Location).Path -cmatch '\\template-specs\\[a-z0-9]+([._-][a-z0-9]+)*\\[a-z0-9]+([._-][a-z0-9]+)*$') {
-            $tsDir = (Get-Location).Path -creplace '(?<![^\\])template-specs(?![^\\])', 'modules'
-            $dirToRename = ((Get-Location).Path -split '\\')[0..4] -join '\'
+        $directorySeperatorChar = [Regex]::Escape([System.IO.Path]::DirectorySeparatorChar)
+        $matchPattern = 'template-specs{0}[a-z0-9]+([._-][a-z0-9]+)*{0}[a-z0-9]+([._-][a-z0-9]+)*$' -f @(
+            $directorySeperatorChar
+        )
+        if ((Get-Location).Path -cmatch $matchPattern) {
+            $tsDir = (Get-Location).Path -creplace "(?<![^${directorySeperatorChar}])template-specs(?![^${directorySeperatorChar}])", 'modules'
+            if ($IsWindows) {
+                $dirToRename = ((Get-Location).Path -split $directorySeperatorChar)[0..4] -join ([System.IO.Path]::DirectorySeparatorChar)
+            }
+            elseif ($IsLinux) {
+                $dirToRename = ((Get-Location).Path -split $directorySeperatorChar)[0..6] -join ([System.IO.Path]::DirectorySeparatorChar)
+            }
             $newName = $dirToRename -creplace 'template-specs', 'modules'
             Set-Location -Path $env:USERPROFILE
             Rename-Item -Path $dirToRename -NewName $newName
@@ -35,7 +44,7 @@
             brm generate
             Set-Location -Path $env:USERPROFILE
             Rename-Item -Path $newName -NewName $dirToRename
-            Set-Location -Path ($tsDir -creplace '(?<![^\\])modules(?![^\\])', 'template-specs')
+            Set-Location -Path ($tsDir -creplace "(?<![^${directorySeperatorChar}])modules(?![^${directorySeperatorChar}])", 'template-specs')
         }
         else {
             throw 'Could not find the directory for the template spec. Navigate to the created folder and invoke the command again from there.'
@@ -78,7 +87,11 @@ function Brm-Validate {
             Set-Location -Path $env:USERPROFILE
             Rename-Item -Path $dirToRename -NewName $newName
             Set-Location -Path $tsDir
-            brm validate
+            $validate = @(brm validate)
+            if ($validate -cmatch 'modified|oudated') {
+                throw ($validate | Where-Object { $_ -cmatch 'modified|oudated' })
+            }
+            $validate
             Set-Location -Path $env:USERPROFILE
             Rename-Item -Path $newName -NewName $dirToRename
             Set-Location -Path ($tsDir -creplace "(?<![^${directorySeperatorChar}])modules(?![^${directorySeperatorChar}])", 'template-specs')
