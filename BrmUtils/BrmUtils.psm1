@@ -75,9 +75,6 @@ function Brm-Validate {
                 $dirToRename = ((Get-Location).Path -split $directorySeperatorChar)[0..6] -join ([System.IO.Path]::DirectorySeparatorChar)
             }
             $newName = $dirToRename -creplace 'template-specs', 'modules'
-            $tsDir | Write-Output
-            $dirToRename | Write-Output
-            $newName | Write-Output
             Set-Location -Path $env:USERPROFILE
             Rename-Item -Path $dirToRename -NewName $newName
             Set-Location -Path $tsDir
