@@ -68,8 +68,16 @@ function Brm-Validate {
         )
         if ((Get-Location).Path -cmatch $matchPattern) {
             $tsDir = (Get-Location).Path -creplace "(?<![^${directorySeperatorChar}])template-specs(?![^${directorySeperatorChar}])", 'modules'
-            $dirToRename = ((Get-Location).Path -split $directorySeperatorChar)[0..4] -join ([System.IO.Path]::DirectorySeparatorChar)
+            if ($IsWindows) {
+                $dirToRename = ((Get-Location).Path -split $directorySeperatorChar)[0..4] -join ([System.IO.Path]::DirectorySeparatorChar)
+            }
+            elseif ($IsLinux) {
+                $dirToRename = ((Get-Location).Path -split $directorySeperatorChar)[0..6] -join ([System.IO.Path]::DirectorySeparatorChar)
+            }
             $newName = $dirToRename -creplace 'template-specs', 'modules'
+            $tsDir | Write-Output
+            $dirToRename | Write-Output
+            $newName | Write-Output
             Set-Location -Path $env:USERPROFILE
             Rename-Item -Path $dirToRename -NewName $newName
             Set-Location -Path $tsDir
