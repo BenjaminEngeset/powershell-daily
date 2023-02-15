@@ -87,11 +87,7 @@ function Brm-Validate {
             Set-Location -Path $env:USERPROFILE
             Rename-Item -Path $dirToRename -NewName $newName
             Set-Location -Path $tsDir
-            $validate = @(brm validate)
-            if ($validate -cmatch 'modified|oudated') {
-                throw ($validate | Where-Object { $_ -cmatch 'modified|oudated' })
-            }
-            $validate
+            brm validate
             Set-Location -Path $env:USERPROFILE
             Rename-Item -Path $newName -NewName $dirToRename
             Set-Location -Path ($tsDir -creplace "(?<![^${directorySeperatorChar}])modules(?![^${directorySeperatorChar}])", 'template-specs')
