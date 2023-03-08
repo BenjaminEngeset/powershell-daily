@@ -27,7 +27,7 @@ function Create-AzUserAssignedIdentity {
     [CmdletBinding(SupportsShouldProcess)]
     param (
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [ValidatePattern('^[A-Za-z0-9][\w]{2,127}$')]
+        [ValidatePattern('^[A-Za-z0-9][\w-]{2,127}$')]
         [ValidateLength(3, 128)]
         [string]$Name,
 
@@ -35,7 +35,7 @@ function Create-AzUserAssignedIdentity {
         [string]$ResourceGroupName,
 
         [Parameter(ValueFromPipelineByPropertyName)]
-        [string]$Location = ($ResourceGroupName | Get-AzResourceGroup).Location,
+        [string]$Location = (Get-AzResourceGroup -Name $ResourceGroupName).Location,
 
         [Parameter(ValueFromPipelineByPropertyName)]
         [string]$SubscriptionId = (Get-AzContext).Subscription.Id,
